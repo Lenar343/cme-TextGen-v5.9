@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>N8N Web Client</title>
+  <script src="index.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0f0f0f;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #262626;
+      --text-primary: #ffffff;
+      --text-secondary: #a3a3a3;
+      --text-muted: #737373;
+      --accent-primary: #3b82f6;
+      --accent-hover: #2563eb;
+      --border-primary: #404040;
+      --border-secondary: #262626;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 8px;
+      --radius-lg: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .url-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    #urlInput {
+      flex: 1;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-secondary);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 400;
+      transition: all 0.2s ease;
+    }
+
+    #urlInput:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+    }
+
+    #urlInput::placeholder {
+      color: var(--text-muted);
+    }
+
+    button {
+      background: var(--accent-primary);
+      color: var(--text-primary);
+      border: none;
+      border-radius: var(--radius);
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* ✅ New Small Button */
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      background-color: var(--accent-primary);
+      border: 1px solid var(--border-secondary);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+    }
+
+      .btn-small1 {
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      background-color: var(--accent-primary);
+      border: 1px solid var(--border-secondary);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      width: 9%;
+    }
+
+
+    .btn-success {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background-color: #059669;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #dc2626;
+    }
+
+    .btn-icon {
+      padding: 6px;
+      font-size: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .btn-icon:hover {
+      color: var(--accent-primary);
+    }
+
+    .input-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+    }
+
+    .editor-toolbar button {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-secondary);
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    .editor-toolbar button:hover {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border-color: var(--border-primary);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+      margin: 1rem 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--border-primary);
+      transition: 0.3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: var(--text-primary);
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent-primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .dropdown-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .dropdown-section, .dropdown-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      display: block;
+      font-size: 14px;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    select {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-secondary);
+      border-radius: var(--radius);
+      padding: 0.75rem;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+    }
+
+    textarea {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 120px;
+      transition: all 0.2s ease;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+    }
+
+    textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    #textInput {
+      min-height: 150px;
+      width: 100%;
+    }
+
+    #textResult {
+      min-height: 200px;
+      width: 100%;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .toggle-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+    }
+
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .toggle-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent-primary);
+      cursor: pointer;
+    }
+
+    .result-wrapper {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      padding: 1rem;
+    }
+
+    .result-toolbar {
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-secondary);
+      padding: 1rem;
+    }
+
+    .post-actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.75rem;
+      gap: 1rem;
+    }
+
+    #textImageInput {
+      margin-top: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+    }
+
+    #imageGallery {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      min-height: 100px;
+    }
+
+    #imageGallery:empty::before {
+      content: "Images will appear here...";
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .text-card-wrapper {
+      margin-top: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .settings-popup {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .textInput-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .input-toolbar {
+      position: absolute;
+      top: -12px; /* adjust upward as needed */
+      right: 0;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 2;
+    }
+
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+        gap: 1.5rem;
+      }
+
+      .url-section {
+        flex-direction: column;
+      }
+
+      .dropdown-container {
+        grid-template-columns: 1fr;
+      }
+
+      .control-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .toggle-group {
+        grid-template-columns: 1fr;
+      }
+
+      .post-actions-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    #imageGallery,
+    #textCards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+    }
+
+    .card {
+      position: relative;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid var(--border-secondary);
+    }
+
+    .card-text {
+      padding: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px 6px;
+      font-size: 0.8rem;
+      background-color: var(--accent-primary);
+      border: none;
+      color: white;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      cursor: pointer;
+    }
+
+    .card:hover .copy-btn {
+      opacity: 1;
+    }
+
+    .copy-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-primary);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+  </style>
+
+</head>
+<body>
+  <div class="container"> cme TextGen v6.8
+
+
+    <!-- ✅ WRAPPER FOR TOOLBAR + TEXTAREA -->
+    <div class="textInput-wrapper">
+      <div class="input-toolbar">
+        <!-- <button class="btn-small" onclick="postText()">🔄 AI Gen</button> -->
+        <button class="btn-small" onclick="continueAI('input')">▶️ AI Continue</button>
+        <!-- <button class="btn-icon" onclick="toggleSettingsPopup()">⚙️</button> -->
+      </div>
+
+      <textarea id="textInput" placeholder="Enter or paste your text here..."></textarea>
+    </div>
+
+    
+    <!-- <div class="dropdown-container"> -->
+      <div class="dropdown-section">
+        <label for="dropdown">Main AI:</label>
+        <select id="dropdown" name="dropdown" required>
+          <option value="">Loading options...</option>
+        </select>
+      <!-- </div> -->
+      <!-- <div class="dropdown-titles"> -->
+        <label for="dropdowntitles">History:</label>
+        <select id="dropdowntitles" name="dropdowntitles" required>
+          <option value="">Loading options...</option>
+        </select>
+        <label class="toggle-item"><input type="checkbox" id="custom-prompt"> Custom Prompt</label>
+      </div>
+    <!-- </div> -->
+    
+    <textarea id="promptInput" placeholder="The Main prompt the AI will use"></textarea>
+
+    
+    <div class="toggle-group">
+      <label class="toggle-item"><input type="checkbox" id="emojis"> Emojis</label>
+      <label class="toggle-item"><input type="checkbox" id="cta"> Call to Action</label>
+      <label class="toggle-item"><input type="checkbox" id="facts"> Facts & Stats</label>
+      <!-- <label class="toggle-item"><input type="checkbox" id="longPost"> Long Post</label> -->
+      <label class="toggle-item"><input type="checkbox" id="hotTakes"> Hot Takes</label>
+      <!-- <label class="toggle-item"><input type="checkbox" id="clickbait"> Clickbait List</label> -->
+      <label class="toggle-item"><input type="checkbox" id="images"> Image</label>
+    </div>
+    
+    <div class="generate-ai-main">
+      <button onclick="postText()" class="btn-success">🔄 GENERATE</button>
+    </div>
+
+    <!-- <button class="btn-small1" onclick="continueAI('result')">▶️ Continue</button> -->
+
+    <!-- ✅ Text Result Area -->
+    <div class="result-wrapper">
+      <textarea id="textResult" placeholder="AI Enhanced result will appear here..."></textarea>
+      <div class="post-actions-row">
+        <button onclick="deleteRecord()" class="btn-danger">🗑 Delete</button>
+        <!-- <button onclick="saveRecord()" class="btn-success">💾 Save to New Record</button> -->
+      </div>
+    </div>
+    <!-- 
+      <textarea id="textImageInput" placeholder="Enter the image search here..."></textarea>
+      <button onclick="fetchImages()">Image Search</button> -->
+      <!-- <button onclick="generateAI()">🔄 GENERATE</button> -->
+      
+    <div id="imageGallery"></div>
+      
+    <div id="textCards" class="text-card-wrapper"></div>
+    </div>
+</body>
+</html>
+
+<script>
+
+    function loadDropdownOptions() {
+      const options = [
+        { value: 'Narrative', label: 'Narrative Prompt' },
+        { value: 'Business', label: 'Business Prompt' },
+        { value: 'Business10', label: 'Business Top 10' },
+        { value: 'Wehelpyou', label: 'We Help You Grow' }
+      ];
+
+      const dropdown = document.getElementById('dropdown');
+      dropdown.innerHTML = '<option value="">Select an option...</option>';
+
+      options.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option.value;
+        optionElement.textContent = option.label;
+        dropdown.appendChild(optionElement);
+      });
+    }
+
+    function toggleSettingsPopup() {
+      const popup = document.getElementById('settingsPopup');
+      popup.style.display = (popup.style.display === 'none' || popup.style.display === '') ? 'block' : 'none';
+    }
+
+    function togglePrompt() {
+      const prompt = document.getElementById('promptInput');
+      const show = document.getElementById('showPrompt').checked;
+      prompt.style.display = show ? 'block' : 'none';
+    }
+
+
+    async function submitTextWithDropdown() {
+      const textInput = document.getElementById('textInput').value;
+      const selectedDropdown = document.getElementById('dropdown').value;
+
+      const formData = {
+        text: textInput,
+        dropdown: selectedDropdown,
+        emojis: document.getElementById('emojis').checked.toString(),
+        cta: document.getElementById('cta').checked.toString(),
+        facts: document.getElementById('facts').checked.toString(),
+        longPost: document.getElementById('longPost').checked.toString(),
+        hotTakes: document.getElementById('hotTakes').checked.toString()
+      };
+
+      if (!textInput || !selectedDropdown) {
+        alert('Please fill in both text and select an option');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/submit-form', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to submit form');
+        }
+
+        const result = await response.json();
+        document.getElementById('textResult').value =
+          `Success! Response: ${JSON.stringify(result, null, 2)}`;
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        document.getElementById('textResult').value =
+          `Error: ${error.message}`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadDropdownOptions);
+
+</script>
