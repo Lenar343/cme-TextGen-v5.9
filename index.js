@@ -41,7 +41,7 @@ async function getTitles() {
   dropdown.innerHTML = ''; // Clear existing options
 
   try {
-    const response = await fetch('https://n8n.enhanced-tech.de:5678/webhook/get-titles', {
+    const response = await fetch('https://n8n.enhanced-tech.de/webhook/get-titles', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ event: 'page_loaded' })
@@ -990,4 +990,5 @@ Zukunftssichere Strategien für Marktveränderungen
 
 Thema zur Entwicklung deines Business-Posts:`
 };
+
 
