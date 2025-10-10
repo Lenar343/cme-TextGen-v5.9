@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!selectedId) return;
 
     try {
-      const response = await fetch('https://n8n.enhanced-tech.de:5678/webhook/get-latest-prompt', {
+      const response = await fetch('https://n8n.enhanced-tech.de/webhook/get-latest-prompt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: selectedId })
@@ -210,7 +210,7 @@ async function postText() {
   document.getElementById('textResult').value = '';  
   
   try {
-    const response = await fetch('https://n8n.enhanced-tech.de:5678/webhook/generate-from-text', {
+    // const response = await fetch('https://n8n.enhanced-tech.de/webhook/generate-from-text', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ formData })
@@ -397,7 +397,7 @@ async function continueAI(inputName) {
   };
 
   try {
-    const response = await fetch('https://n8n.enhanced-tech.de:5678/webhook/continue-text', {
+    const response = await fetch('https://n8n.enhanced-tech.de/webhook/continue-text', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
@@ -452,7 +452,7 @@ async function generateAI(inputName) {
   };
 
   try {
-    const response = await fetch('https://n8n.enhanced-tech.de:5678/webhook/generate-new-text', {
+    const response = await fetch('https://n8n.enhanced-tech.de/webhook/generate-new-text', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
@@ -495,7 +495,7 @@ async function deleteRecord() {
   };
 
   try {
-    const response = await fetch('https://n8n.enhanced-tech.de:5678/webhook/delete-record', {
+    const response = await fetch('https://n8n.enhanced-tech.de/webhook/delete-record', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ formData })
@@ -990,5 +990,6 @@ Zukunftssichere Strategien für Marktveränderungen
 
 Thema zur Entwicklung deines Business-Posts:`
 };
+
 
 
